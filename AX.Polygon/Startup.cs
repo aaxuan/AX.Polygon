@@ -1,7 +1,6 @@
 using AX.Polygon.DataRepository;
 using AX.Polygon.Filter;
 using AX.Polygon.Util;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -28,8 +27,7 @@ namespace AX.Polygon
             var mvcBuilder = services.AddControllersWithViews(options =>
             {
                 //过滤器
-                options.Filters.Add<GlobalExceptionFilter>();
-                //options.Filters.Add<AuthorizeFilterAttribute>();
+                options.Filters.Add<GlobalExceptionFilter>(); 
                 //options.ModelMetadataDetailsProviders.Add(new ModelBindingMetadataProvider());
             });
 
@@ -55,10 +53,6 @@ namespace AX.Polygon
 
             //services.AddOptions();
             //services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(GlobalContext.HostingEnvironment.ContentRootPath + Path.DirectorySeparatorChar + "DataProtection"));
-
-            //Cookie
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie();
 
             //ioc中心绑定
             services.AddHttpContextAccessor();
@@ -93,7 +87,6 @@ namespace AX.Polygon
 
             app.UseRouting();
 
-            app.UseCookiePolicy();
             //UseAuthentication：帮助我们检查“您是谁？”
             app.UseAuthentication();
             //UseAuthorization：有助于检查“是否允许您访问信息？”

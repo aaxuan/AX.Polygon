@@ -3,20 +3,17 @@
 namespace AX.Polygon.Areas.Admin.Controllers
 {
     [Area("admin")]
-    public class HomeController : Controller
+    [Filter.AuthorizeFilter()]
+    public class HomeController : WebCore.BaseController
     {
         public IActionResult Index()
         {
             return View();
         }
 
-        #region api
-
-        public IActionResult GetMenu()
+        public IActionResult Welcome()
         {
-            throw new System.Exception();
+            return View();
         }
-
-        #endregion api
     }
 }

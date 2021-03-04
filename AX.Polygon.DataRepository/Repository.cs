@@ -143,7 +143,6 @@ namespace AX.Polygon.DataRepository
 
         public async Task<bool> DeleteByIdAsync<T>(dynamic id) where T : class
         {
-            var type = typeof(T);
             var key = GetSingleKey<T>();
             var tableName = GetTableName<T>();
             var sql = $"delete from {tableName} where {key.Name} = @id";
@@ -172,7 +171,12 @@ namespace AX.Polygon.DataRepository
 
         public async Task<T> GetByIdAsync<T>(dynamic id) where T : class
         {
-            return await SqlMapperExtensions.GetAsync<T>(id, DBTransaction);
+            var key = GetSingleKey<T>();
+            var tableName = GetTableName<T>();
+            var sql = $"select * from {tableName} where {key.Name} = @id";
+            var dynParams = new DynamicParameters();
+            dynParams.Add("@id", id);
+            return await DBConnection.QuerySingleOrDefaultAsync<T>(sql, dynParams, DBTransaction);
         }
 
         public async Task<T> QuerySingleAsync<T>(string sql, object param = null) where T : class
@@ -187,6 +191,9 @@ namespace AX.Polygon.DataRepository
 
         public async Task<IEnumerable<T>> QueryAsync<T>(string sql, object param = null) where T : class
         {
+            if (sql.ToLower().StartsWith("where"))
+            { sql = $"select * from {GetTableName<T>()} " + sql; }
+
             return await DBConnection.QueryAsync<T>(sql, param, DBTransaction);
         }
 
@@ -264,7 +271,7 @@ namespace AX.Polygon.DataRepository
 
                 sb.AppendLine($"DROP TABLE IF EXISTS `{tableName}`;");
                 sb.AppendLine($"CREATE TABLE IF NOT EXISTS `{tableName}` (");
-                
+
                 foreach (var propertyInfo in type.GetProperties())
                 {
                     sb.AppendLine($"`{propertyInfo.Name}`    {GetType(propertyInfo)}    {GetCanNull(propertyInfo, PrimaryKey)}    COMMENT '{Util.Reflect.GetPropertiesDisplayNameValue(propertyInfo)}',");

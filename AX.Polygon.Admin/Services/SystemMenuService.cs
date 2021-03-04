@@ -1,12 +1,11 @@
-﻿using System;
+﻿using AX.Polygon.Admin.DataModel;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AX.Polygon.Admin.Services
 {
-    class SystemMenuService
+    public class SystemMenuService : BaseService<SystemMenu>
     {
         //public class MenuAuthorizeBLL
         //{
@@ -65,16 +64,6 @@ namespace AX.Polygon.Admin.Services
         //    }
         //    #endregion
         //}
-
-
-
-
-
-
-
-
-
-
 
         //private MenuService menuService = new MenuService();
 
@@ -194,8 +183,172 @@ namespace AX.Polygon.Admin.Services
         //    return list;
         //}
         //#endregion
+
+        public async Task<List<DataModel.DTO.MenuTreeResult>> GetUserMenu()
+        {
+            var menus = await DB.GetAllAsync<SystemMenu>();
+            var rootMenu = menus.ToList().Where(p => p.ParentId == "0").ToList();
+
+            var result = new List<DataModel.DTO.MenuTreeResult>();
+            foreach (var item in rootMenu)
+            {
+                var firstResultItem = new DataModel.DTO.MenuTreeResult();
+                firstResultItem.Menu = item;
+                firstResultItem.Child = new List<DataModel.DTO.MenuTreeResult>();
+                var firstResultItemChild = menus.Where(p => p.ParentId == item.Id);
+                foreach (var item1 in firstResultItemChild)
+                {
+                    var scendResultItem = new DataModel.DTO.MenuTreeResult();
+                    scendResultItem.Menu = item1;
+                    scendResultItem.Child = new List<DataModel.DTO.MenuTreeResult>();
+                    var scendResultItemChild = menus.Where(p => p.ParentId == item1.Id);
+                    foreach (var item2 in scendResultItemChild)
+                    {
+                        var thirdResultItem = new DataModel.DTO.MenuTreeResult();
+                        thirdResultItem.Menu = item2;
+                        scendResultItem.Child.Add(thirdResultItem);
+                    }
+                    firstResultItem.Child.Add(scendResultItem);
+                }
+                result.Add(firstResultItem);
+            }
+
+            return result;
+        }
+
+        //        {
+        //	"0": {
+        //		"title": "常规管理",
+        //		"icon": "fa fa-address-book",
+        //		"href": "",
+        //		"target": "_self",
+        //		"child": [
+        //			{
+        //				"title": "主页模板",
+        //				"href": "",
+        //				"icon": "fa fa-home",
+        //				"target": "_self",
+        //				"child": [
+        //					{
+        //						"title": "主页一",
+        //						"href": "page/welcome-1.html",
+        //						"icon": "fa fa-tachometer",
+        //						"target": "_self"
+        //					},
+        //					{
+        //						"title": "主页二",
+        //						"href": "page/welcome-2.html",
+        //						"icon": "fa fa-tachometer",
+        //						"target": "_self"
+        //					},
+        //					{
+        //	"title": "主页三",
+        //						"href": "page/welcome-3.html",
+        //						"icon": "fa fa-tachometer",
+        //						"target": "_self"
+        //					}
+        //				]
+        //			},
+        //			{
+        //	"title": "菜单管理",
+        //				"href": "page/menu.html",
+        //				"icon": "fa fa-window-maximize",
+        //				"target": "_self"
+        //			},
+        //			{
+        //	"title": "系统设置",
+        //				"href": "page/setting.html",
+        //				"icon": "fa fa-gears",
+        //				"target": "_self"
+        //			},
+        //			{
+        //	"title": "表格示例",
+        //				"href": "page/table.html",
+        //				"icon": "fa fa-file-text",
+        //				"target": "_self"
+        //			},
+        //			{
+        //	"title": "表单示例",
+        //				"href": "",
+        //				"icon": "fa fa-calendar",
+        //				"target": "_self",
+        //				"child": [
+        //					{
+        //		"title": "普通表单",
+        //						"href": "page/form.html",
+        //						"icon": "fa fa-list-alt",
+        //						"target": "_self"
+        //					},
+        //					{
+        //		"title": "分步表单",
+        //						"href": "page/form-step.html",
+        //						"icon": "fa fa-navicon",
+        //						"target": "_self"
+        //					}
+        //				]
+        //			},
+        //			{
+        //	"title": "登录模板",
+        //				"href": "",
+        //				"icon": "fa fa-flag-o",
+        //				"target": "_self",
+        //				"child": [
+        //					{
+        //		"title": "登录-1",
+        //						"href": "page/login-1.html",
+        //						"icon": "fa fa-stumbleupon-circle",
+        //						"target": "_blank"
+        //					},
+        //					{
+        //		"title": "登录-2",
+        //						"href": "page/login-2.html",
+        //						"icon": "fa fa-viacoin",
+        //						"target": "_blank"
+        //					},
+        //					{
+        //		"title": "登录-3",
+        //						"href": "page/login-3.html",
+        //						"icon": "fa fa-tags",
+        //						"target": "_blank"
+        //					}
+        //				]
+        //			},
+        //			{
+        //	"title": "异常页面",
+        //				"href": "",
+        //				"icon": "fa fa-home",
+        //				"target": "_self",
+        //				"child": [
+        //					{
+        //		"title": "404页面",
+        //						"href": "page/404.html",
+        //						"icon": "fa fa-hourglass-end",
+        //						"target": "_self"
+        //					}
+        //				]
+        //			},
+        //			{
+        //	"title": "其它界面",
+        //				"href": "",
+        //				"icon": "fa fa-snowflake-o",
+        //				"target": "",
+        //				"child": [
+        //					{
+        //		"title": "按钮示例",
+        //						"href": "page/button.html",
+        //						"icon": "fa fa-snowflake-o",
+        //						"target": "_self"
+        //					},
+        //					{
+        //		"title": "弹出层",
+        //						"href": "page/layer.html",
+        //						"icon": "fa fa-shield",
+        //						"target": "_self"
+        //					}
+        //				]
+        //			}
+        //		]
+        //	}
+        //}
     }
-
-
-
 }

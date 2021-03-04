@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace AX.Polygon.Filter
 {
@@ -16,102 +15,88 @@ namespace AX.Polygon.Filter
 
         public string AuthCode { get; set; }
 
-        //public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
-        //{
-        //    bool hasPermission = false;
+        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        {
+            bool hasPermission = false;
 
-        //    OperatorInfo user = await Operator.Instance.Current();
-        //    if (user == null || user.UserId == 0)
-        //    {
-        //        // 防止用户选择记住我，页面一直在首页刷新
-        //        if (new CookieHelper().GetCookie("RememberMe").ParseToInt() == 1)
-        //        {
-        //            Operator.Instance.RemoveCurrent();
-        //        }
+            //判断是否浏览器Json请求
+            bool isJsonRequest = false;
+            if (context.HttpContext.Request.Headers != null)
+            { isJsonRequest = context.HttpContext.Request.Headers["X-Requested-With"] == "XMLHttpRequest"; }
 
-        //        #region 没有登录
+            var user = await Controllers.AuthController.CurrentUser();
 
-        //        if (context.HttpContext.Request.IsAjaxRequest())
-        //        {
-        //            TData obj = new TData();
-        //            obj.Message = "抱歉，没有登录或登录已超时";
-        //            context.Result = new JsonResult(obj);
-        //            return;
-        //        }
-        //        else
-        //        {
-        //            context.Result = new RedirectResult("~/Home/Login");
-        //            return;
-        //        }
+            //没有登录或超时
+            if (user == null)
+            {
+                if (isJsonRequest)
+                {
+                    context.Result = new JsonResult(new Util.JsonResultMessage() { Code = -999, Message = "您没有登录或身份验证已超时，请重新登录" });
+                    return;
+                }
+                else
+                {
+                    context.Result = new RedirectResult("~/Home/Login");
+                    return;
+                }
+            }
 
-        //        #endregion 没有登录
-        //    }
-        //    else
-        //    {
-        //        // 系统用户拥有所有权限
-        //        if (user.IsSystem == 1)
-        //        {
-        //            hasPermission = true;
-        //        }
-        //        else
-        //        {
-        //            // 权限判断
-        //            if (!string.IsNullOrEmpty(AuthCode))
-        //            {
-        //                string[] authorizeList = AuthCode.Split(',');
-        //                TData<List<MenuAuthorizeInfo>> objMenuAuthorize = await new MenuAuthorizeBLL().GetAuthorizeList(user);
-        //                List<MenuAuthorizeInfo> authorizeInfoList = objMenuAuthorize.Data.Where(p => authorizeList.Contains(p.Authorize)).ToList();
-        //                if (authorizeInfoList.Any())
-        //                {
-        //                    hasPermission = true;
+            //验证用户权限
+            //admin 全部权限
+            if (user.IsAdmin)
+            { hasPermission = true; }
 
-        //                    #region 新增和修改判断
+            // 权限判断
+            if (!string.IsNullOrEmpty(AuthCode))
+            {
+                //string[] authorizeList = AuthCode.Split(',');
+                //TData<List<MenuAuthorizeInfo>> objMenuAuthorize = await new MenuAuthorizeBLL().GetAuthorizeList(user);
+                //List<MenuAuthorizeInfo> authorizeInfoList = objMenuAuthorize.Data.Where(p => authorizeList.Contains(p.Authorize)).ToList();
+                //if (authorizeInfoList.Any())
+                //{
+                //    hasPermission = true;
 
-        //                    if (context.RouteData.Values["Action"].ToString() == "SaveFormJson")
-        //                    {
-        //                        var id = context.HttpContext.Request.Form["Id"];
-        //                        if (id.ParseToLong() > 0)
-        //                        {
-        //                            if (!authorizeInfoList.Where(p => p.Authorize.Contains("edit")).Any())
-        //                            {
-        //                                hasPermission = false;
-        //                            }
-        //                        }
-        //                        else
-        //                        {
-        //                            if (!authorizeInfoList.Where(p => p.Authorize.Contains("add")).Any())
-        //                            {
-        //                                hasPermission = false;
-        //                            }
-        //                        }
-        //                    }
+                //    #region 新增和修改判断
 
-        //                    #endregion 新增和修改判断
-        //                }
-        //                if (!hasPermission)
-        //                {
-        //                    if (context.HttpContext.Request.IsAjaxRequest())
-        //                    {
-        //                        TData obj = new TData();
-        //                        obj.Message = "抱歉，没有权限";
-        //                        context.Result = new JsonResult(obj);
-        //                    }
-        //                    else
-        //                    {
-        //                        context.Result = new RedirectResult("~/Home/NoPermission");
-        //                    }
-        //                }
-        //            }
-        //            else
-        //            {
-        //                hasPermission = true;
-        //            }
-        //        }
-        //        if (hasPermission)
-        //        {
-        //            var resultContext = await next();
-        //        }
-        //    }
-        //}
+                //    if (context.RouteData.Values["Action"].ToString() == "SaveFormJson")
+                //    {
+                //        var id = context.HttpContext.Request.Form["Id"];
+                //        if (id.ParseToLong() > 0)
+                //        {
+                //            if (!authorizeInfoList.Where(p => p.Authorize.Contains("edit")).Any())
+                //            {
+                //                hasPermission = false;
+                //            }
+                //        }
+                //        else
+                //        {
+                //            if (!authorizeInfoList.Where(p => p.Authorize.Contains("add")).Any())
+                //            {
+                //                hasPermission = false;
+                //            }
+                //        }
+                //    }
+
+                //    #endregion 新增和修改判断
+                //}
+            }
+
+            if (hasPermission)
+            {
+                var resultContext = await next();
+            }
+            else
+            {
+                if (isJsonRequest)
+                {
+                    context.Result = new JsonResult(new Util.JsonResultMessage() { Code = -999, Message = "您没有该操作权限" });
+                    return;
+                }
+                else
+                {
+                    context.Result = new RedirectResult("~/Home/Error?message=" + HttpUtility.UrlEncode("您没有该操作权限"));
+                }
+            }
+        }
     }
 }
