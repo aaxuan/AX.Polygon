@@ -5,7 +5,7 @@ namespace AX.Polygon.Areas.Admin.Controllers
 {
     [Area("admin")]
     [Filter.AuthorizeFilter()]
-    public class UserHomeController : BaseController
+    public class UserController : BaseController
     {
         public IActionResult List()
         {
