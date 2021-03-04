@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "AX.Polygon";
+    Layout = "_layout";
+}
+
+@section header{
+}
+
+<div class="layui-container">
+
+    <ul class="layui-nav layui-bg-cyan">
+        <li class="layui-nav-item"><a href="#"> @ViewData["Title"] </a></li>
+        <li class="layui-nav-item layui-this"><a href="#">介 绍</a></li>
+    </ul>
+    <ul class="layui-nav layui-layout-right layui-bg-cyan">
+        <li class="layui-nav-item"><a href="@Url.Content("~/Home/Login")">登 录</a></li>
+    </ul>
+
+    <blockquote class="layui-elem-quote" style="text-align: center;margin-top:15px">
+        @ViewData["Title"] 是一款基于.Net Core 5 MVC的快速开发框架。
+    </blockquote>
+</div>

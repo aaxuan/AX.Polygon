@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AX.Polygon.DataRepository\AX.Polygon.DataRepository.csproj" />
+    <ProjectReference Include="..\AX.Polygon.Util\AX.Polygon.Util.csproj" />
+  </ItemGroup>
+
+</Project>
