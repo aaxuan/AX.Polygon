@@ -142,6 +142,39 @@ layui.define(["jquery", "miniMenu", "element", "miniTab", "miniTheme"], function
             });
         },
 
+        // get 获取 api
+        postApi: function (url, parm, callback) {
+            console.info(url);
+            console.info(parm);
+            console.info(window.location.host + url);
+            $.ajax({
+                url: url,
+                type: "post",
+                contentType: "application/json; charset=UTF-8",
+                data: JSON.stringify(parm),
+                success: function (obj) {
+                    console.info(obj);
+                    if (obj.Code === -999) {
+                        layer.msg("异常：" + obj.Message);
+                        return;
+                    }
+                    if (obj.Code === 0) {
+                        layer.msg("失败：" + obj.Message);
+                        return;
+                    }
+                    if (obj.Code === 1) {
+                        layer.msg("成功：" + obj.Message);
+                        callback(obj.Data);
+                    }
+                },
+                error: function (xmlhttprequest, errmessage, err) {
+                    console.error(xmlhttprequest);
+                    console.error(errmessage);
+                    console.error(err);
+                }
+            });
+        },
+
         //初始化iframe窗口动画
         renderAnim: function (anim) {
             if (anim) {

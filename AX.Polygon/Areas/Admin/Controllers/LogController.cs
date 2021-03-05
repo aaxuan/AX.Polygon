@@ -7,7 +7,7 @@ namespace AX.Polygon.Areas.Admin.Controllers
 {
     [Area("admin")]
     [Filter.AuthorizeFilter()]
-    public class UserController : BaseController
+    public class LogController : BaseController
     {
         public IActionResult List()
         {
@@ -19,7 +19,7 @@ namespace AX.Polygon.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> GetList([FromBody] SearchArguments searchArguments)
         {
-            return SuccessResultMessage(await new Polygon.Admin.Services.UserService().DefualtGetList(searchArguments));
+            return SuccessResultMessage(await new Polygon.Admin.Services.SystemLogService().DefualtGetList(searchArguments));
         }
 
         #endregion 接口

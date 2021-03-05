@@ -22,9 +22,9 @@ namespace AX.Polygon.DataRepository.Model
         /// </summary>
         public int PageItemCount { get; set; }
 
-        public List<SearchFilter> SearchFilter { get; set; }
+        public List<SearchFilter> SearchFilter { get; set; } = new List<SearchFilter>();
 
-        public bool UsePage { get { return PageItemCount == -1; } }
+        public bool UsePage { get { if (PageItemCount == -1) { return false; } return true; } }
     }
 
     public class SearchFilter
