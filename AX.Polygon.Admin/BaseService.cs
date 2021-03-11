@@ -1,11 +1,12 @@
-﻿using AX.Polygon.DataRepository.Model;
+﻿using AX.DataRepository;
+using AX.DataRepository.Models;
 using System.Threading.Tasks;
 
 namespace AX.Polygon.Admin
 {
     public class BaseService<T> where T : class, new()
     {
-        internal DataRepository.IRepository DB { get { return Util.IOCManager.GetScopeService<DataRepository.IRepository>(); } }
+        internal IDataRepository DB { get { return Util.IOCManager.GetScopeService<IDataRepository>(); } }
 
         internal async Task<T> InitCreate(T model)
         {
@@ -23,9 +24,9 @@ namespace AX.Polygon.Admin
             return model;
         }
 
-        public async Task<PageData<T>> DefualtGetList(SearchArguments searchArguments)
+        public async Task<PageResult<T>> DefualtGetList(FetchParameter searchArguments)
         {
-            return await DB.QueryPageListAsync<T>(searchArguments);
+            return await DB.GetListAsync<T>(searchArguments);
         }
 
         public async Task<T> DefualtInsert(T entity)
@@ -37,7 +38,7 @@ namespace AX.Polygon.Admin
 
         public async Task<T> DefualtGetById(string id)
         {
-            return await DB.GetByIdAsync<T>(id);
+            return await DB.SingleOrDefaultByIdAsync<T>(id);
         }
     }
 }

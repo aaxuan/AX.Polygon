@@ -1,4 +1,4 @@
-using AX.Polygon.DataRepository;
+using AX.DataRepository;
 using AX.Polygon.Filter;
 using AX.Polygon.Util;
 using Microsoft.AspNetCore.Builder;
@@ -27,7 +27,7 @@ namespace AX.Polygon
             var mvcBuilder = services.AddControllersWithViews(options =>
             {
                 //过滤器
-                options.Filters.Add<GlobalExceptionFilter>(); 
+                options.Filters.Add<GlobalExceptionFilter>();
                 //options.ModelMetadataDetailsProviders.Add(new ModelBindingMetadataProvider());
             });
 
@@ -44,7 +44,7 @@ namespace AX.Polygon
                 options.SerializerSettings.NullValueHandling = NullValueHandling.Include;
             });
             //数据库链接
-            services.AddScoped<IRepository>(provider => { return new Repository(new MySql.Data.MySqlClient.MySqlConnection("server=localhost;database=test;user=root;password=root;port=3306;pooling=true;charset=utf8mb4;")); });
+            services.AddScoped<IDataRepository>(provider => { return new DataRepository.DataRepository(new MySql.Data.MySqlClient.MySqlConnection("server=localhost;database=test;user=root;password=root;port=3306;pooling=true;charset=utf8mb4;")); });
             //编码问题
             services.AddSingleton(HtmlEncoder.Create(UnicodeRanges.All));
             //Encoding.RegisterProvider(CodePa gesEncodingProvider.Instance);

@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AX.Polygon", "AX.Polygon\AX.Polygon.csproj", "{0C1C9A08-090D-40A2-B88D-696FD84CB11C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AX.Polygon.DataRepository", "AX.Polygon.DataRepository\AX.Polygon.DataRepository.csproj", "{9AC9938E-B9E0-43D4-9946-334C892C0EFC}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AX.Polygon.Util", "AX.Polygon.Util\AX.Polygon.Util.csproj", "{791FF467-F065-40BC-8E58-40A803BE2A8F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AX.Polygon.Admin", "AX.Polygon.Admin\AX.Polygon.Admin.csproj", "{B8841C52-82AE-499E-B50B-0E3B2976606B}"
@@ -26,10 +24,6 @@ Global
 		{0C1C9A08-090D-40A2-B88D-696FD84CB11C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C1C9A08-090D-40A2-B88D-696FD84CB11C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C1C9A08-090D-40A2-B88D-696FD84CB11C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9AC9938E-B9E0-43D4-9946-334C892C0EFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9AC9938E-B9E0-43D4-9946-334C892C0EFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9AC9938E-B9E0-43D4-9946-334C892C0EFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9AC9938E-B9E0-43D4-9946-334C892C0EFC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{791FF467-F065-40BC-8E58-40A803BE2A8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{791FF467-F065-40BC-8E58-40A803BE2A8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{791FF467-F065-40BC-8E58-40A803BE2A8F}.Release|Any CPU.ActiveCfg = Release|Any CPU

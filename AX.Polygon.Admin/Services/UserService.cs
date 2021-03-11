@@ -1,5 +1,4 @@
 ﻿using AX.Polygon.Admin.DataModel;
-using AX.Polygon.DataRepository;
 using AX.Polygon.Util;
 using System;
 using System.Security.Cryptography;
@@ -51,8 +50,7 @@ namespace AX.Polygon.Admin.Services
             if (string.IsNullOrWhiteSpace(loginName)) { throw new WarningMessageException("用户名或密码不能为空"); }
             if (string.IsNullOrWhiteSpace(password)) { throw new WarningMessageException("用户名或密码不能为空"); }
 
-            var db = IOCManager.GetScopeService<IRepository>();
-            var user = await db.QuerySingleAsync<User>("select * from base_user where LoginName = @LoginName", new { LoginName = loginName });
+            var user = await DB.SingleOrDefaultAsync<User>("select * from base_user where LoginName = @LoginName", new { LoginName = loginName });
 
             if (user == null)
             {
@@ -71,7 +69,7 @@ namespace AX.Polygon.Admin.Services
             user.PreviousVisit = user.LastVisit;
             user.LastVisit = DateTime.Now;
 
-            await db.Update<User>(user);
+            await DB.UpdateAsync<User>(user);
             return user;
         }
 

@@ -1,5 +1,5 @@
-﻿using AX.Polygon.Admin.DataModel;
-using AX.Polygon.DataRepository;
+﻿using AX.DataRepository;
+using AX.Polygon.Admin.DataModel;
 using System.Threading.Tasks;
 
 namespace AX.Polygon.Admin.Services
@@ -17,7 +17,7 @@ namespace AX.Polygon.Admin.Services
             loginfo.Id = Util.IOCManager.GetService<Util.IDGenerator>().CreateID();
             loginfo.LogType = logintype;
             loginfo.LogMessage = logMessage;
-            var db = Util.IOCManager.GetScopeService<IRepository>();
+            var db = Util.IOCManager.GetScopeService<IDataRepository>();
             await db.InsertAsync(loginfo);
             return loginfo;
         }

@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AX.DataRepository" Version="1.0.1" />
     <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AX.Polygon.DataRepository\AX.Polygon.DataRepository.csproj" />
     <ProjectReference Include="..\AX.Polygon.Util\AX.Polygon.Util.csproj" />
   </ItemGroup>
 

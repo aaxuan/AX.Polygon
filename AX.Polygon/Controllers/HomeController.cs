@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AX.DataRepository;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 
 namespace AX.Polygon.Controllers
 {
@@ -15,7 +19,6 @@ namespace AX.Polygon.Controllers
         }
 
         [HttpGet]
-
         public IActionResult Login()
         {
             return View();
@@ -43,10 +46,19 @@ namespace AX.Polygon.Controllers
         [HttpGet]
         public IActionResult GetCreateSystemSQL()
         {
-            var sql = Util.IOCManager.GetScopeService<DataRepository.IRepository>().GetCreateTableSql();
+            var allType = Assembly.Load("AX.Polygon.Admin").GetTypes();
+            var dataModelType = allType.Where(p => p.Namespace == "AX.Polygon.Admin.DataModel").ToList();
+
+            var sb = new StringBuilder();
+
+            foreach (var type in dataModelType)
+            {
+                var sql = Util.IOCManager.GetScopeService<IDataRepository>().UpdateSchema(type);
+                sb.AppendLine(sql);
+            }
             var stream = new MemoryStream();
             var writer = new StreamWriter(stream);
-            writer.Write(sql);
+            writer.Write(sb.ToString());
             writer.Flush();
             stream.Position = 0;
 
